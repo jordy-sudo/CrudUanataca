@@ -1,0 +1,16 @@
+# CRUD
+
+Solucion para la prueba tecnica enviada
+
+## Ejecucion
+
+Para que la aplicacion corra sin problemas se necesita crear la base de datos y las tablas pertinentes junto
+con su procedimiento almacenado. 
+
+```bash
+# ejecutar script
+sql config/databases.sql
+```
+
+## Error en pregunta de refuerzo
+se adjunto imagen del error 

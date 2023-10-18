@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once 'config/database.php';
 include_once 'models/UsuarioModel.php';
 include_once 'controllers/UsuarioController.php';
@@ -13,7 +14,11 @@ $db = $database->getConnection();
 $model = new UsuarioModel($db);
 $controller = new UsuarioController($model);
 
+
+
 $action = isset($_GET['action']) ? $_GET['action'] : 'index';
+
+
 
 
 
@@ -30,19 +35,42 @@ switch ($action) {
         include 'views/create.php';
         break;
     case 'edit':
-        $id = isset($_GET['id']) ? $_GET['id'] : die('Error: ID de usuario no especificado.');
-        $usuario = $model->readOne($id);
-        include 'views/edit.php';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'];
+            $nombre = $_POST['nombre'];
+            $ci_ruc = $_POST['ci_ruc'];
+            $direccion = $_POST['direccion'];
+            $telefono = $_POST['telefono'];
+            $email = $_POST['email'];
+            $controller->update($id,$nombre, $ci_ruc, $direccion, $telefono, $email);
+        }
         break;
-    case 'view':
-        $id = isset($_GET['id']) ? $_GET['id'] : die('Error: ID de usuario no especificado.');
-        $usuario = $model->readOne($id);
-        include 'views/view.php';
+    case 'delete':
+        $id = $_GET['id'];
+        $controller->delete($id);
         break;
-    case 'edit_process':
+    case 'login':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $controller->verifyAuth($username, $password);
+        }
+        break;
+    case 'logout':
+        session_destroy();
+        header("Location: login.php");
+        exit;
+        break;
+    case 'auth':
+        $usuarios = $model->read();
+        include 'views/index.php';
         break;
     default:
         $usuarios = $model->read();
-        include 'views/index.php';
+        if (!isset($_SESSION['username']) ) {
+            include 'login.php';
+        }else{
+            include 'views/index.php';
+        }
         break;
 }

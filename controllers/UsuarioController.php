@@ -13,22 +13,26 @@ class UsuarioController {
         include 'views/index.php';
     }
 
+
+
     public function create($nombre, $ci_ruc, $direccion, $telefono, $email) {
         if ($this->model->create($nombre, $ci_ruc, $direccion, $telefono, $email)) {
-            header('Location: index.php');
+            header('Location: /');
         } else {
             echo "Error al crear el usuario.";
         }
     }
+    
+ 
 
     public function edit($id) {
         $usuario = $this->model->readOne($id);
         include 'views/edit.php';
     }
 
-    public function update($id, $nombre, $email, $telefono) {
-        if ($this->model->update($id, $nombre, $email, $telefono)) {
-            header('Location: index.php');
+    public function update($id, $nombre, $ci_ruc, $direccion, $telefono, $email) {
+        if ($this->model->update($id, $nombre, $ci_ruc, $direccion, $telefono, $email)) {
+            header('Location: /');
         } else {
             echo "Error al actualizar el usuario.";
         }
@@ -36,9 +40,19 @@ class UsuarioController {
 
     public function delete($id) {
         if ($this->model->delete($id)) {
-            header('Location: index.php');
+            header('Location: /');
         } else {
             echo "Error al eliminar el usuario.";
+        }
+    }
+
+    public function verifyAuth($username, $password) {
+        if ($this->model->verifyAuth($username, $password)) {
+            $_SESSION['username'] = $username;
+            header("Location: /");
+        } else {
+            header("Location: ?error=1");
+            exit;
         }
     }
 }
