@@ -11,6 +11,3 @@ con su procedimiento almacenado.
 # ejecutar script
 sql config/databases.sql
 ```
-
-## Error en pregunta de refuerzo
-se adjunto imagen del error 
